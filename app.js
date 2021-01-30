@@ -4,11 +4,10 @@ var mongo = require('mongodb')
 var mongoclint = mongo.MongoClient;
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const mongourl = "mongodb+srv://ruchika:ruchika123@rest.ujhyi.mongodb.net/restaurentapp?retryWrites=true&w=majority";
+var mongourl = "mongodb://localhost:27017";
+var db;
+var port = process.env.PORT||9450;  
 
-// var mongourl = "mongodb://localhost:27017";
-var db;  
-var port = 9450; 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json())
@@ -63,7 +62,7 @@ app.get('/rest', (req, res) => {
         condition = { "type.mealtype": req.query.mealtype }
     }
 
-    db.collection('rest').find(condition).toArray((err, result) => {
+    db.collection('restaurent').find(condition).toArray((err, result) => {
         if (err) throw err;
         // res.status(200).send(result)
         res.send(result)
@@ -81,7 +80,7 @@ app.get('/rest/:id', (req, res) => {
 
 ////cuision route//////
 app.get('/cusion', (req, res) => {
-    db.collection('cuision').find().toArray((err, result) => {
+    db.collection(c).find().toArray((err, result) => {
         if (err) throw err;
         res.send(result)
     })
@@ -103,7 +102,7 @@ app.post('/placeholder', (req, res) => {
     })
 })
 
-////get booking 
+////get booking
 app.get('/order', (req, res) => {
     db.collection('orders').find({}).toArray((err, result) => {
         if (err) throw err;
@@ -114,7 +113,7 @@ app.get('/order', (req, res) => {
 ////////connection with mongodb ///////
 mongoclint.connect(mongourl, (err, connection) => {
     if (err) throw err;
-    db = connection.db('restaurentapp')
+    db = connection.db('edureka')
 })
 
 app.listen(port, (err) => {
