@@ -73,7 +73,7 @@ app.get('/rest', (req, res) => {
 //////rest parem
 app.get('/rest/:id', (req, res) => {
     var id = req.params.id
-    db.collection('restaurent').find({ city: id }).toArray((err, result) => {
+    db.collection('rest').find({ city: id }).toArray((err, result) => {
         if (err) throw err;
         res.send(result)
     })
