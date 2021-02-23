@@ -3,7 +3,7 @@ var app = express();
 var mongo = require('mongodb')
 var mongoclint = mongo.MongoClient;
 const bodyParser = require('body-parser');
-const cors = require('cors');
+const cors = require('cors'); 
 const mongourl = "mongodb+srv://ruchika:ruchika123@rest.ujhyi.mongodb.net/restaurentapp?retryWrites=true&w=majority";
 
 // var mongourl = "mongodb://localhost:27017";
@@ -37,9 +37,15 @@ app.get('/city', function(req, res) {
     })
 })
 
-//////rest route///////
+//////rest route/////// 
 app.get('/rest', (req, res) => {
     var condition = {};
+    ///sort data// 
+   let sortcondition = {cost:1} ;
+   if(req.query.mealtype && req.query.sort){
+       condition = {"type.mealtype":req.query.mealtype}
+       sortcondition = {cost:Number(req.query.sort)}; 
+   } 
     //meal+city
     if (req.query.mealtype && req.query.city) {
         condition = { $and: [{ "type.mealtype": req.query.mealtype }, { city: req.query.city }] }
@@ -53,7 +59,7 @@ app.get('/rest', (req, res) => {
         condition = {
             $and: [{ "type.mealtype": req.query.mealtype }, { cost: { $lt: Number(req.query.hcost), $gt: Number(req.query.lcost) } }]
         }
-    }
+    } 
     //city//
     else if (req.query.city) {
         condition = { city: req.query.city }
@@ -62,8 +68,7 @@ app.get('/rest', (req, res) => {
     else if (req.query.mealtype) {
         condition = { "type.mealtype": req.query.mealtype }
     }
-
-    db.collection('rest').find(condition).toArray((err, result) => {
+    db.collection('rest').find(condition).sort(sortcondition).toArray((err, result) => {
         if (err) throw err;
         // res.status(200).send(result)
         res.send(result)
@@ -71,13 +76,21 @@ app.get('/rest', (req, res) => {
 })
 
 //////rest parem
-app.get('/rest/:id', (req, res) => {
+app.get('/rest/:id', (req,res) => {
     var id = req.params.id
-    db.collection('restaurent').find({ city: id }).toArray((err, result) => {
+    db.collection('rest').find({_id:id}).toArray((err,result) => {
         if (err) throw err;
         res.send(result)
     })
 })
+
+// app.get('/rest/:id',(req,res) =>{
+//     var id = req.params.id
+//     db.collection('restaurent').find({_id:id}).toArray((err,result) => {
+//       if(err) throw err;
+//       res.send(result)
+//     })
+//   })
 
 ////cuision route//////
 app.get('/cusion', (req, res) => {
