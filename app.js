@@ -40,7 +40,7 @@ app.get('/city', function(req, res) {
 //////rest route/////// 
 app.get('/rest', (req, res) => {
     var condition = {};
-    ///sort data// 
+    ///sort data basis of cost// 
    let sortcondition = {cost:1} ;
    if(req.query.mealtype && req.query.sort){
        condition = {"type.mealtype":req.query.mealtype}
@@ -78,7 +78,11 @@ app.get('/rest', (req, res) => {
 //////rest parem
 app.get('/rest/:id', (req,res) => {
     var id = req.params.id
+<<<<<<< HEAD
     db.collection('rest').find({_id:id}).toArray((err,result) => {
+=======
+    db.collection('rest').find({_id:id}).toArray((err, result) => {
+>>>>>>> 0bdfc052b18f7dd0a6fdba29d98a50f0611db25e
         if (err) throw err;
         res.send(result)
     })
